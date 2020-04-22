@@ -21,6 +21,10 @@ import static io.vavr.API.Match;
 import static io.vavr.API.unchecked;
 import static io.vavr.Predicates.instanceOf;
 
+/**
+ * Short training from Grzegorz Piwowarek presentation
+ * https://www.youtube.com/watch?v=2JTlFAjhL3U&t=2184s
+ */
 public class VavrApplicationTests {
 
     @Test
