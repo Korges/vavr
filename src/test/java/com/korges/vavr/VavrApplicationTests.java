@@ -2,23 +2,17 @@ package com.korges.vavr;
 
 
 import io.vavr.Lazy;
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import io.vavr.collection.Stream;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static io.vavr.API.List;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 public class VavrApplicationTests {
 
@@ -79,5 +73,36 @@ public class VavrApplicationTests {
         lazy.get();
     }
 
+    @Test
+    public void vavr_7() {
+        List<Integer> integers = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
+        Integer a = integers.head();
+        List<Integer> b = integers.tail();
+        List<Integer> c = integers.drop(1);
+        List<Integer> d = integers.dropRight(1);
+
+        System.out.println(integers);
+    }
+
+    @Test
+    public void vavr_8() {
+        List<Integer> integers = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+        System.out.println(integers.zipWithIndex());
+    }
+
+    @Test
+    public void vavr_9() {
+        java.util.List<Integer> l = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+                .collect(Collectors.toList());
+    }
+
+    @Test
+    public void vavr_10() {
+        Stream<Integer> iterate = Stream.iterate(0, i -> i + 1)
+                .take(10);
+
+        System.out.println(iterate.get(9));
+    }
 }
