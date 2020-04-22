@@ -2,6 +2,8 @@ package com.korges.vavr;
 
 
 import io.vavr.Lazy;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.collection.Stream;
 import io.vavr.control.Option;
@@ -12,7 +14,12 @@ import java.net.URI;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
 import static io.vavr.API.List;
+import static io.vavr.API.Match;
+import static io.vavr.API.unchecked;
+import static io.vavr.Predicates.instanceOf;
 
 public class VavrApplicationTests {
 
@@ -104,5 +111,37 @@ public class VavrApplicationTests {
                 .take(10);
 
         System.out.println(iterate.get(9));
+    }
+
+    @Test
+    public void vavr_11() {
+        List.of(1, 2)
+                .asJava();
+    }
+
+    @Test
+    public void vavr_12() {
+        Tuple2<String, Integer> tuple = Tuple.of("Java", 11);
+
+        String result = tuple.apply((x, integer) -> x + integer);
+
+        System.out.println(result);
+    }
+
+    @Test
+    public void vavr_13() {
+        List.of("")
+                .map(unchecked(s -> new URI(s)));
+    }
+
+    @Test
+    public void vavr_14() {
+        Object a = 42;
+
+        String of = Match(a).of(
+                Case($(instanceOf(String.class)), "string"),
+                Case($(instanceOf(Integer.class)), "int"));
+
+        System.out.println(of);
     }
 }
