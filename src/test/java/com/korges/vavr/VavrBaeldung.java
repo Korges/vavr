@@ -4,6 +4,7 @@ import com.korges.vavr.dto.Person;
 import com.korges.vavr.validator.PersonValidator;
 import io.vavr.Function0;
 import io.vavr.Function2;
+import io.vavr.Lazy;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -291,5 +293,27 @@ public class VavrBaeldung {
         assertEquals(
                 "Invalid(List(Invalid characters in name: ?!4, Age must be at least 0))",
         invalid.toString());
+    }
+
+
+    // Vavr - Lazy
+    // Lazy is a container which represents a value computed lazily i.e. computation is deferred until 
+    // the result is required. Furthermore, the evaluated value is cached or memoized and returned 
+    // again and again each time it is needed without repeating the computation
+
+
+    @Test
+    public void givenFunction_whenEvaluatesWithLazy_thenCorrect() {
+        Lazy<Double> lazy = Lazy.of(Math::random);
+        assertFalse(lazy.isEvaluated());
+
+        double val1 = lazy.get();
+        System.out.println(val1);
+        assertTrue(lazy.isEvaluated());
+
+        double val2 = lazy.get();
+        System.out.println(val2);
+
+        assertEquals(val1, val2, 0.1);
     }
 }
