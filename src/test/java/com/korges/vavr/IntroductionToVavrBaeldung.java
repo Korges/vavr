@@ -2,7 +2,6 @@ package com.korges.vavr;
 
 import com.korges.vavr.dto.Person;
 import com.korges.vavr.validator.PersonValidator;
-import io.vavr.API;
 import io.vavr.Function0;
 import io.vavr.Function2;
 import io.vavr.Lazy;
@@ -31,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * Introduction to Vavr
  * https://www.baeldung.com/vavr
  */
-public class VavrBaeldung {
+public class IntroductionToVavrBaeldung {
 
     // Vavr - OPTION
 
