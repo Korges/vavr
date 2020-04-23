@@ -2,6 +2,7 @@ package com.korges.vavr;
 
 import com.korges.vavr.dto.Person;
 import com.korges.vavr.validator.PersonValidator;
+import io.vavr.API;
 import io.vavr.Function0;
 import io.vavr.Function2;
 import io.vavr.Lazy;
@@ -18,6 +19,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.function.Function;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -315,5 +319,29 @@ public class VavrBaeldung {
         System.out.println(val2);
 
         assertEquals(val1, val2, 0.1);
+    }
+
+    // Vavr - Pattern Matching
+    // Pattern matching is a native concept in almost all functional programming languages.
+    // There is no such thing in Java for now.
+
+
+    /**
+     * In Vavr, we replace the entire switch block with a Match method.
+     * Each case or if statement is replaced by a Case method invocation.
+     *
+     * Finally, atomic patterns like $() replace the condition which then evaluates an expression or value.
+     * We also provide this as the second parameter to Case:
+     */
+    @Test
+    public void whenMatchworks_thenCorrect() {
+        int input = 2;
+        String output = Match(input).of(
+                Case($(1), "one"),
+                Case($(2), "two"),
+                Case($(3), "three"),
+                Case($(), "?"));
+
+        assertEquals("two", output);
     }
 }
