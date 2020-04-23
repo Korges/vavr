@@ -1,5 +1,7 @@
 package com.korges.vavr;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import io.vavr.control.Option;
 import org.junit.Test;
 
@@ -85,4 +87,22 @@ public class VavrBaeldung {
         assertEquals("notNull", nameOption.getOrElse("else"));
     }
 
+    // Vavr - Tuple
+    // Tuples are immutable and can hold multiple objects of different types in a type-safe manner.
+
+    /**
+     * Vavr brings tuples to Java 8.
+     * Tuples are of type Tuple1, Tuple2 to Tuple8 depending on the number of elements they are to take.
+     * There is currently an upper limit of eight elements.
+     * We access elements of a tuple like tuple._n where n is similar to the notion of an index in arrays:
+     */
+    @Test
+    public void whenCreatesTuple_thenCorrect1() {
+        Tuple2<String, Integer> tuple = Tuple.of("Java", 8);
+        String elementFirst = tuple._1;
+        int elementSecond = tuple._2;
+
+        assertEquals("Java", elementFirst);
+        assertEquals(8, elementSecond);
+    }
 }
