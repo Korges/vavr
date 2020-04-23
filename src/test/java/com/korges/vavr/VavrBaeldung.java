@@ -4,10 +4,13 @@ import io.vavr.Function0;
 import io.vavr.Function2;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
@@ -216,5 +219,45 @@ public class VavrBaeldung {
         int summed = sum.apply(3, 9);
 
         assertEquals(12, summed);
+    }
+
+    
+    // Vavr - Collections
+    // Collections API that meets the requirements of functional programming i.e. persistence, immutability.
+
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void whenImmutableCollectionThrows_thenCorrect() {
+        java.util.List<String> wordList = Arrays.asList("one", "two");
+        java.util.List<String> list = Collections.unmodifiableList(wordList);
+        list.add("boom");
+    }
+
+    @Test
+    public void whenCreatesVavrList_thenCorrect() {
+        List<Integer> intList = List.of(1, 2, 3, 4, 5);
+        
+        assertEquals(5, intList.size());
+        assertEquals(Integer.valueOf(1), intList.get(0));
+        assertEquals(Integer.valueOf(3), intList.get(2));
+        assertEquals(Integer.valueOf(5), intList.get(4));
+
+        intList.push(10);
+        assertEquals(5, intList.size());
+        assertEquals(Integer.valueOf(5), intList.last());
+
+        List<Integer> updated = intList.append(10);
+        assertEquals(6, updated.size());
+        assertEquals(Integer.valueOf(10), updated.get(5));
+    }
+
+    @Test
+    public void whenSumsVavrList_thenCorrect() {
+        int sum = List.of(1, 2, 3)
+                .sum()
+                .intValue();
+
+        assertEquals(6, sum);
+
     }
 }
