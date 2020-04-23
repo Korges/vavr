@@ -3,10 +3,12 @@ package com.korges.vavr;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.control.Option;
+import io.vavr.control.Try;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Introduction to Vavr
@@ -87,6 +89,7 @@ public class VavrBaeldung {
         assertEquals("notNull", nameOption.getOrElse("else"));
     }
 
+
     // Vavr - Tuple
     // Tuples are immutable and can hold multiple objects of different types in a type-safe manner.
 
@@ -104,5 +107,52 @@ public class VavrBaeldung {
 
         assertEquals("Java", elementFirst);
         assertEquals(8, elementSecond);
+    }
+
+
+    // Vavr - Try
+    // Try is a container for a computation which may result in an exception.
+
+    /**
+     * Try wraps a computation so that we don't have to explicitly take care of exceptions with try-catch blocks.
+     *
+     * Take the following code for example:
+     */
+    @Test(expected = ArithmeticException.class)
+    public void givenBadCode_whenThrowsException_thenCorrect() {
+        int i = 1 / 0;
+    }
+
+    /**
+     * Without try-catch blocks, the application would crash.
+     * In order to avoid this, you would need to wrap the statement in a try-catch block. 
+     * With Vavr, we can wrap the same code in a Try instance and get a result:
+     */
+    @Test
+    public void givenBadCode_whenTryHandles_thenCorrect() {
+        Try<Integer> result = Try.of(() -> 1 / 0);
+
+        assertTrue(result.isFailure());
+    }
+
+    /**
+     * We can also choose to return a default value:
+     */
+    @Test
+    public void givenBadCode_whenTryHandles_thenCorrect2() {
+        Try<Integer> computation = Try.of(() -> 1 / 0);
+        int result = computation.getOrElse(() -> -1);
+
+        assertEquals(-1, result);
+    }
+
+    /**
+     * Or even to explicitly throw an exception of our choice:
+     */
+    @Test(expected = ArithmeticException.class)
+    public void givenBadCode_whenTryHandles_thenCorrect3() {
+        String result = Try.of(() -> 1 / 0)
+                .map(Object::toString)
+                .getOrElseThrow(x -> new ArithmeticException());
     }
 }
