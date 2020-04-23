@@ -1,10 +1,14 @@
 package com.korges.vavr;
 
+import io.vavr.Function0;
+import io.vavr.Function2;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -154,5 +158,63 @@ public class VavrBaeldung {
         String result = Try.of(() -> 1 / 0)
                 .map(Object::toString)
                 .getOrElseThrow(x -> new ArithmeticException());
+    }
+
+
+    // Vavr - Functional Interfaces
+    // Java 8 provides only two basic functions. One takes only a single parameter and the second takes two parameters
+    // and produces a result. 
+    // On the flip side, Vavr extends the idea of functional interfaces in Java 
+    // further by supporting up to a maximum of eight parameters and spicing up the API 
+    // with methods for memoization, composition, and currying.
+
+    /**
+     * Just like tuples, these functional interfaces are named according to the number of parameters they take:
+     * Function0, Function1, Function2 etc.
+     * With Vavr, we would have written the above two functions like this:
+     */
+    @Test
+    public void givenVavrFunction_whenWorks_thenCorrect() {
+        Function<Integer, Integer> square = num -> num * num;
+        int result = square.apply(2);
+
+        assertEquals(4, result);
+    }
+
+    @Test
+    public void givenVavrBiFunction_whenWorks_thenCorrect() {
+        Function2<Integer, Integer, Integer> sum =
+                (num1, num2) -> num1 + num2;
+        int result = sum.apply(1, 2);
+
+        assertEquals(3, result);
+    }
+
+    /**
+     * When there is no parameter but we still need an output,
+     * in Java 8 we would need to use a Consumer type, in Vavr Function0 is there to help:
+     */
+    @Test
+    public void whenCreatesFunction_thenCorrect0() {
+        Function0<String> getClazzName = () -> this.getClass().getName();
+        String clazzName = getClazzName.apply();
+
+        assertEquals("com.korges.vavr.VavrBaeldung", clazzName);
+    }
+
+    /**
+     * We can also combine the static factory method FunctionN.of for any of the functions to create 
+     * a Vavr function from a method reference. Like if we have the following sum method:
+     */
+    private int sum(int a, int b) {
+        return a + b;
+    }
+
+    @Test
+    public void whenCreatesFunctionFromMethodRef_thenCorrect() {
+        Function2<Integer, Integer, Integer> sum = Function2.of(this::sum);
+        int summed = sum.apply(3, 9);
+
+        assertEquals(12, summed);
     }
 }
