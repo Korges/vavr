@@ -1,12 +1,16 @@
 package com.korges.vavr;
 
+import com.korges.vavr.dto.Person;
+import com.korges.vavr.validator.PersonValidator;
 import io.vavr.Function0;
 import io.vavr.Function2;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
+import io.vavr.collection.Seq;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
+import io.vavr.control.Validation;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -258,6 +262,34 @@ public class VavrBaeldung {
                 .intValue();
 
         assertEquals(6, sum);
+    }
 
+
+    // Vavr - Validation
+    // Vavr brings the concept of Applicative Functor to Java from the functional programming world. 
+    // In the simplest of terms, an Applicative Functor enables us to perform a sequence of actions while accumulating 
+    // the results.
+
+    /**
+     * The rule for age is that it should be an integer greater than 0 and the rule for name is that it
+     * should contain no special characters:
+     */
+    @Test
+    public void whenValidationWorks_thenCorrect() {
+        PersonValidator personValidator = new PersonValidator();
+
+        Validation<Seq<String>, Person> valid =
+                personValidator.validatePerson("John Doe", 30);
+
+        Validation<Seq<String>, Person> invalid =
+                personValidator.validatePerson("John? Doe!4", -1);
+
+        assertEquals(
+                "Valid(Person [name=John Doe, age=30])",
+                valid.toString());
+
+        assertEquals(
+                "Invalid(List(Invalid characters in name: ?!4, Age must be at least 0))",
+        invalid.toString());
     }
 }
