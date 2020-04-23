@@ -55,4 +55,34 @@ public class VavrBaeldung {
         assertEquals("None", noneOption.toString());
         assertEquals("Some(value)", someOption.toString());
     }
+
+    /**
+     * Therefore, instead of using object values directly,
+     * it's advisable to wrap them inside an Option instance as shown above.
+     * Notice, that we did not have to do a check before calling toString
+     * yet we did not have to deal with a NullPointerException as we had done before.
+     * Option's toString returns us meaningful values in each call.
+     * In the second snippet of this section, we needed a null check,
+     * in which we would assign a default value to the variable, before attempting to use it.
+     * Option can deal with this in a single line, even if there is a null:
+     */
+    @Test
+    public void givenValue_whenCreatesOption_thenCorrect2() {
+        String name = null;
+        Option<String> nameOption = Option.of(name);
+
+        assertEquals("else", nameOption.getOrElse("else"));
+    }
+
+    /**
+     * Or a non-null:
+     */
+    @Test
+    public void givenValue_whenCreatesOption_thenCorrect3() {
+        String name = "notNull";
+        Option<String> nameOption = Option.of(name);
+
+        assertEquals("notNull", nameOption.getOrElse("else"));
+    }
+
 }
