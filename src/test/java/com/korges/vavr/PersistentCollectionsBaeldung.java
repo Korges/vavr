@@ -1,8 +1,11 @@
 package com.korges.vavr;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.CharSeq;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
+import io.vavr.collection.Queue;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +30,12 @@ public class PersistentCollectionsBaeldung {
 
     /**
      * List
+     *
+     * Persistent Lists are formed recursively from a head and a tail:
+     * Head – the first element
+     * Tail – a list containing remaining elements (that list is also formed from a head and a tail)
+     * There are static factory methods in the List API that can be used for creating a List.
+     * We can use the static of() method to create an instance of List from one or more objects.
      */
     @Test
     public void vavr_list() {
@@ -102,5 +111,39 @@ public class PersistentCollectionsBaeldung {
 
         List<Integer> intList2 = intList1.pop();
         assertEquals(intList2.size(), (intList1.size() - 1) );
+    }
+
+    /**
+     * Queue
+     *
+     * A Queue internally consists of two linked lists, a front List, and a rear List.
+     * The front List contains the elements that are dequeued, and the rear List contains the elements that are enqueued.
+     * This allows enqueue and dequeue operations to perform in O(1).
+     * When the front List runs out of elements, front and rear List's are swapped, and the rear List is reversed.
+     */
+    @Test
+    public void vavr_queue() {
+        Queue<Integer> queue = Queue.of(1, 2, 3);
+        Queue<Integer> secondQueue = queue.enqueueAll(List.of(4,5));
+
+        assertEquals(3, queue.size());
+        assertEquals(5, secondQueue.size());
+
+        Tuple2<Integer, Queue<Integer>> result = secondQueue.dequeue();
+        assertEquals(Integer.valueOf(1), result._1);
+
+        Tuple2<Integer, Queue<Integer>> result2 = result._2.dequeue();
+        assertEquals(Integer.valueOf(2), result2._1);
+
+        Queue<Integer> tailQueue = result._2;
+        assertFalse(tailQueue.contains(secondQueue.get(0)));
+    }
+
+    @Test
+    public void vavr_queue2() {
+        Queue<Integer> queue = Queue.of(1, 2, 3);
+
+        Queue<Queue<Integer>> queue1 = queue.combinations(2);
+        assertEquals(queue1.get(2).toCharSeq(), CharSeq.of("23"));
     }
 }
