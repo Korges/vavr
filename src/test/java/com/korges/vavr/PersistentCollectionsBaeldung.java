@@ -6,7 +6,9 @@ import io.vavr.collection.Iterator;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
+import io.vavr.collection.Stream;
 import org.junit.Test;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -145,5 +147,45 @@ public class PersistentCollectionsBaeldung {
 
         Queue<Queue<Integer>> queue1 = queue.combinations(2);
         assertEquals(queue1.get(2).toCharSeq(), CharSeq.of("23"));
+    }
+
+    /**
+     * A Stream is an implementation of a lazy linked list and is quite different from java.util.stream. 
+     * Unlike java.util.stream, the Vavr Stream stores data and is lazily evaluating next elements.
+     *
+     * Vavr Stream is immutable and may be Empty or Cons. A Cons consists of a head element and a lazy computed
+     * tail Stream. Unlike a List, for a Stream, only the head element is kept in memory. The tail elements are computed on demand.
+     */
+    @Test
+    public void vavr_stream() {
+        Stream<Integer> intStream = Stream.iterate(0, i -> i + 1)
+                .take(10);
+
+        assertEquals(10, intStream.size());
+        assertEquals(Integer.valueOf(9), intStream.last());
+
+        long evenSum = intStream.filter(i -> i % 2 == 0)
+                .sum()
+                .longValue();
+
+        assertEquals(20, evenSum);
+    }
+
+    @Test
+    public void vavr_stream2() {
+        Stream<Integer> s1 = Stream.tabulate(10, i -> i + 1);
+        assertEquals(10, s1.size());
+        assertEquals(s1.get(2).intValue(), 3);
+    }
+
+    @Test
+    public void vavr_stream3() {
+        Stream<Integer> s = Stream.of(2,1,3,4);
+
+        Stream<Tuple2<Integer, Integer>> s2 = s.zip(List.of(7,8,9));
+        Tuple2<Integer, Integer> t1 = s2.get(0);
+
+        assertEquals(t1._1().intValue(), 2);
+        assertEquals(t1._2().intValue(), 7);
     }
 }
