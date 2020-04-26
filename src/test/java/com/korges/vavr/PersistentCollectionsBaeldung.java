@@ -1,15 +1,19 @@
 package com.korges.vavr;
 
+import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.CharSeq;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.HashSet;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
+import io.vavr.collection.SortedMap;
 import io.vavr.collection.SortedSet;
 import io.vavr.collection.Stream;
+import io.vavr.collection.TreeMap;
 import io.vavr.collection.TreeSet;
 import org.junit.Test;
 
@@ -287,5 +291,86 @@ public class PersistentCollectionsBaeldung {
 
         String str = reversedSet.mkString(" and ");
         assertEquals("Red and Green and Blue", str);
+    }
+
+
+    // Vavr - Map
+    // A map is a key-value data structure.
+    // Vavr's Map is immutable and has implementations for HashMap, TreeMap, and LinkedHashMap.
+    // Generally, map contracts don't allow duplicate keys
+    // – though there may be duplicate values mapped to different keys.
+
+    /**
+     * HashMap
+     *
+     * A HashMap is an implementation of an immutable Map interface.
+     * It stores key-value pairs using the hash code of the keys.
+     * Vavr's Map uses Tuple2 to represent key-value pairs instead of a traditional Entry type:
+     */
+    @Test
+    public void vavr_hashMap() {
+        Map<String, String> map1
+                = HashMap.of("key1", "val1", "key2", "val2", "key3", "val3");
+
+        Map<String, String> fMap
+                = map1.filterKeys(k -> k.contains("1") || k.contains("2"));
+        assertFalse(fMap.containsKey("key3"));
+
+        Map<String, String> fMap2
+                = map1.filterValues(v -> v.contains("3"));
+        assertEquals(fMap2.size(), 1);
+        assertTrue(fMap2.containsValue("val3"));
+        assertTrue(fMap2.containsKey("key3"));
+    }
+
+    @Test
+    public void vavr_hashMap2() {
+        Map<String, String> map1
+                = HashMap.of("key1", "val1", "key2", "val2", "key3", "val3");
+        Map<String, Integer> map2 = map1.map(
+                (k, v) -> Tuple.of(k, Integer.valueOf(v.charAt(v.length() - 1) + "")));
+        assertEquals(map2.get("key1").get().intValue(), 1);
+    }
+
+    /**
+     * TreeMap
+     *
+     * An immutable TreeMap is an implementation of the SortedMap interface. Similar to TreeSet,
+     * a Comparator instance is used to custom sort elements of a TreeMap.
+     */
+    @Test
+    public void vavr_treeMap() {
+        SortedMap<Integer, String> map
+                = TreeMap.of(3, "Three", 2, "Two", 4, "Four", 1, "One");
+
+        assertEquals(1, map.keySet().toJavaArray()[0]);
+        assertEquals("Four", map.get(4).get());
+    }
+
+    @Test
+    public void vavr_treeMap2() {
+        TreeMap<Integer, String> treeMap2 =
+                TreeMap.of(Comparator.reverseOrder(), 3,"three", 6, "six", 1, "one");
+        assertEquals(treeMap2.keySet().mkString(), "631");
+    }
+
+    // Vavr - Java Collection Views
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void givenVavrList_whenViewConverted_thenException() {
+        java.util.List<Integer> javaList = List.of(1, 2, 3)
+                .asJava();
+
+        assertEquals(3, javaList.get(2).intValue());
+        javaList.add(4);
+    }
+
+    @Test
+    public void givenVavrList_whenViewConverted() {
+        java.util.List<Integer> javaList = List.of(1, 2, 3)
+                .asJavaMutable();
+        javaList.add(4);
+
+        assertEquals(4, javaList.get(3).intValue());
     }
 }
