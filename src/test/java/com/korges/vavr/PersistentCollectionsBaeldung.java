@@ -1,6 +1,7 @@
 package com.korges.vavr;
 
 import io.vavr.Tuple2;
+import io.vavr.collection.Array;
 import io.vavr.collection.CharSeq;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.List;
@@ -150,7 +151,9 @@ public class PersistentCollectionsBaeldung {
     }
 
     /**
-     * A Stream is an implementation of a lazy linked list and is quite different from java.util.stream. 
+     * Stream
+     *
+     * Implementation of a lazy linked list and is quite different from java.util.stream.
      * Unlike java.util.stream, the Vavr Stream stores data and is lazily evaluating next elements.
      *
      * Vavr Stream is immutable and may be Empty or Cons. A Cons consists of a head element and a lazy computed
@@ -187,5 +190,39 @@ public class PersistentCollectionsBaeldung {
 
         assertEquals(t1._1().intValue(), 2);
         assertEquals(t1._2().intValue(), 7);
+    }
+
+    /**
+     * Array
+     *
+     * Immutable, indexed, sequence that allows efficient random access. It is backed by a Java array of objects.
+     * Essentially, it is a Traversable wrapper for an array of objects of type T.
+     */
+    @Test
+    public void vavr_array() {
+        Array<Integer> arr = Array.of(1, 3, 5);
+
+        Array<Integer> arr2 = Array.range(1, 10);
+        assertEquals(9, arr2.size());
+
+        Array<Integer> arr3 = Array.rangeBy(1, 10, 2);
+        assertEquals(5, arr3.size());
+    }
+
+    @Test
+    public void vavr_array2() {
+        Array<Integer> intArray = Array.of(1, 2, 3);
+        Array<Integer> newArray = intArray.removeAt(1);
+
+        assertEquals(2, newArray.size());
+        assertEquals(3, intArray.size());
+        assertEquals(1, newArray.get(0).intValue());
+        assertEquals(3, newArray.get(1).intValue());
+
+        Array<Integer> array2 = intArray.replace(1, 5);
+        assertEquals(array2.get(0).intValue(), 5);
+
+        Array<Integer> array3 = intArray.update(2, 99);
+        assertEquals(array3.get(2).intValue(), 99);
     }
 }
