@@ -3,13 +3,18 @@ package com.korges.vavr;
 import io.vavr.Tuple2;
 import io.vavr.collection.Array;
 import io.vavr.collection.CharSeq;
+import io.vavr.collection.HashSet;
 import io.vavr.collection.Iterator;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Queue;
+import io.vavr.collection.SortedSet;
 import io.vavr.collection.Stream;
+import io.vavr.collection.TreeSet;
 import org.junit.Test;
 
+
+import java.util.Comparator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -224,5 +229,63 @@ public class PersistentCollectionsBaeldung {
 
         Array<Integer> array3 = intArray.update(2, 99);
         assertEquals(array3.get(2).intValue(), 99);
+    }
+
+
+    // Vavr - Set
+    // The unique feature of the Set data structure is that it doesn't allow duplicate values.
+
+    /**
+     * HashSet
+     *
+     * Basic Implementation of Set
+     */
+    @Test
+    public void vavr_hashSet() {
+        HashSet<Integer> set0 = HashSet.rangeClosed(1,5);
+        HashSet<Integer> set1 = HashSet.rangeClosed(3, 6);
+
+        assertEquals(set0.union(set1), HashSet.rangeClosed(1,6));
+        assertEquals(set0.diff(set1), HashSet.rangeClosed(1,2));
+        assertEquals(set0.intersect(set1), HashSet.rangeClosed(3,5));
+    }
+
+    @Test
+    public void vavr_hashSet2() {
+        HashSet<String> set = HashSet.of("Red", "Green", "Blue");
+        HashSet<String> newSet = set.add("Yellow");
+        HashSet<String> newestSet = newSet.add("Yellow");
+
+        assertEquals(3, set.size());
+        assertEquals(4, newSet.size());
+        assertEquals(4, newestSet.size());
+        assertTrue(newestSet.contains("Yellow"));
+    }
+
+    /**
+     * TreeSet
+     *
+     * An immutable TreeSet is an implementation of the SortedSet interface.
+     * It stores a Set of sorted elements and is implemented using binary search trees
+     * All its operations run in O(log n) time.
+     * By default, elements of a TreeSet are sorted in their natural order.
+     */
+    @Test
+    public void vavr_treeSet() {
+        SortedSet<String> set = TreeSet.of("Red", "Green", "Blue");
+        assertEquals("Blue", set.head());
+
+        SortedSet<Integer> intSet = TreeSet.of(1,2,3);
+        assertEquals(2, intSet.average().get().intValue());
+    }
+
+    @Test
+    public void vavr_treeSet2() {
+        SortedSet<String> reversedSet
+                = TreeSet.of(Comparator.reverseOrder(), "Green", "Red", "Blue");
+        assertEquals("Red", reversedSet.head());
+
+        String str = reversedSet.mkString(" and ");
+        assertEquals("Red and Green and Blue", str);
     }
 }
